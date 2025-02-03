@@ -1,7 +1,11 @@
 from PIL import Image, ImageTk
 import tkinter as tk
-import pyautogui
+from pynput.mouse import Controller
+
+from pynput.mouse import Controller
+
 import numpy                      #y, x
+
 def mover_punto(x1, y1, x2, y2, pasos):
     puntos = []
     for i in range(pasos + 1):  
@@ -16,9 +20,11 @@ def loading_loop(i=0):
     global w
     global h
     velocidad = 10
-    mouse_pos = pyautogui.position()
-    dx = mouse_pos.x - w
-    dy = mouse_pos.y - h
+    mouse_pos = mouse.position
+    mouse_pos_x = mouse_pos[0]
+    mouse_pos_y = mouse_pos[1]
+    dx = mouse_pos_x - w
+    dy = mouse_pos_y - h
 
     distancia = round(max(1, (dx**2 + dy**2) ** 0.5))  # Evita división por 0
 
@@ -31,7 +37,7 @@ def loading_loop(i=0):
 
     # Rotate the original image
     centered_obj = obj_size/ 2
-    rotated_pil_img = pil_img.rotate(numpy.rad2deg(numpy.arctan2(-mouse_pos.y+(centered_obj+h), mouse_pos.x-(centered_obj+w))))
+    rotated_pil_img = pil_img.rotate(numpy.rad2deg(numpy.arctan2(-mouse_pos_y+(centered_obj+h), mouse_pos_x-(centered_obj+w))))
     tk_img = ImageTk.PhotoImage(rotated_pil_img)
 
     # print(numpy.rad2deg(numpy.arctan2(mouse_pos.y, mouse_pos.x)))
@@ -47,6 +53,9 @@ def loading_loop(i=0):
 # Load the original image
 
 root = tk.Tk()
+mouse = Controller()
+
+
 # Quitar bordes de la ventana
 root.overrideredirect(True)
 # Hacer el fondo transparente
